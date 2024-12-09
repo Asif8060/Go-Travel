@@ -1,5 +1,7 @@
-import React from 'react'
-import Lightroom from 'react-lightbox-gallery'
+import React, {useState} from 'react'
+// import Lightroom from 'react-lightbox-gallery'
+import AwesomeLightbox from 'react-awesome-lightbox';
+import 'react-awesome-lightbox/build/style.css';
 import GalleryImg1 from "../../assets/images/gallery/g1.jpg"
 import GalleryImg3 from "../../assets/images/gallery/g3.jpg"
 import GalleryImg4 from "../../assets/images/gallery/g4.jpg"
@@ -8,6 +10,9 @@ import GalleryImg7 from "../../assets/images/gallery/g7.jpg"
 
 
 const Gallery = () => {
+
+    const [openLightbox, setOpenLightbox] = useState(false);
+    const [currentIndex, setCurrentIndex] = useState(0);
 
     var images = [
         {
@@ -40,17 +45,48 @@ const Gallery = () => {
         },
     ];
 
-    var settings = {
-        columnCount: {
-            default: 3,
-            mobile: 2,
-            tab: 3
-        },
-        mode: "dark",
-        enableZoom:false,
-    };
+    // var settings = {
+    //     columnCount: {
+    //         default: 3,
+    //         mobile: 2,
+    //         tab: 3
+    //     },
+    //     mode: "dark",
+    //     enableZoom:false,
+    // };
+
+    const openGallery = (index) => {
+        setCurrentIndex(index);
+        setOpenLightbox(true);
+      };
+    
+      const closeGallery = () => {
+        setOpenLightbox(false);
+      };
     return (
-        <Lightroom images={images} settings={settings} />
+        // <Lightroom images={images} settings={settings} />
+        <div className="gallery">
+            <div className="gallery-images">
+                {images.map((image, index) => (
+                <div className="image-container" key={index}>
+                    <img 
+                    src={image.src} 
+                    alt={image.desc || image.sub} 
+                    onClick={() => openGallery(index)} 
+                    style={{ cursor: 'pointer' }} 
+                    />
+                </div>
+                ))}
+            </div>
+
+            {openLightbox && (
+                <AwesomeLightbox
+                images={images.map(image => image.src)}  // Just an array of image sources
+                startIndex={currentIndex}
+                onClose={closeGallery}
+                />
+            )}
+    </div>
    );
 }
 
